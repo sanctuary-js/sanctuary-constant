@@ -44,20 +44,19 @@
     var type = __doctest.require ('sanctuary-type-identifiers');
     var S = (function() {
       var S = __doctest.require ('sanctuary');
-      var typeIdent = (Constant (Array))['@@type'];
       var ConstantType = $.BinaryType
-        ('sanctuary-constant/Constant')
+        ('Constant')
         ('')
-        (function(x) { return type (x) === typeIdent; })
+        ([])
+        (function(x) { return type (x) === constantTypeIdent; })
         (function(c) { return [c.value]; })
         (function(c) { return []; });
-      var env = Z.concat (
-        S.env,
-        [$.TypeClass, ConstantType ($.Unknown) ($.Unknown)]
-      );
-      return S.create ({checkTypes: true, env: env});
+      var env = Z.concat (S.env, [ConstantType ($.Unknown) ($.Unknown)]);
+      return S.create ({checkTypes: false, env: env});
     } ());
   }
+
+  var constantTypeIdent = 'sanctuary-constant/Constant@1';
 
   //. `Constant a b` satisfies the following [Fantasy Land][] specifications:
   //.
@@ -69,7 +68,7 @@
   //. .   (Z[k].test (Constant (Useless.constructor) (Useless)) ? '\u2705   ' :
   //. .    Z[k].test (Constant (Array) (['foo', 'bar', 'baz'])) ? '\u2705 * ' :
   //. .    /* otherwise */                                        '\u274C   ')
-  //. . ) (S.keys (S.unchecked.filter (S.is ($.TypeClass)) (Z)))
+  //. . ) (S.filter (S.test (/^(?=[A-Z])(?!TypeClass$)/)) (Object.keys (Z)))
   //. [ 'Setoid          ✅ * ',  // if ‘a’ satisfies Setoid
   //. . 'Ord             ✅ * ',  // if ‘a’ satisfies Ord
   //. . 'Semigroupoid    ❌   ',
@@ -157,18 +156,7 @@
       }
     };
 
-    //# Constant.@@type :: String
-    //.
-    //. Constant [type identifier][].
-    //.
-    //. ```javascript
-    //. > type (Constant (Number) (42))
-    //. 'sanctuary-constant/Constant@1'
-    //.
-    //. > type.parse (type (Constant (Number) (42)))
-    //. {namespace: 'sanctuary-constant', name: 'Constant', version: 1}
-    //. ```
-    Constant$bound['@@type'] = 'sanctuary-constant/Constant@1';
+    Constant$bound['@@type'] = constantTypeIdent;
 
     //# Constant.fantasy-land/of :: Monoid m => a -> Constant m a
     //.
@@ -326,5 +314,4 @@
 //. [`Z.equals`]:               v:sanctuary-js/sanctuary-type-classes#equals
 //. [`Z.lte`]:                  v:sanctuary-js/sanctuary-type-classes#lte
 //. [iff]:                      https://en.wikipedia.org/wiki/If_and_only_if
-//. [type identifier]:          v:sanctuary-js/sanctuary-type-identifiers
 //. [type representative]:      v:fantasyland/fantasy-land#type-representatives
