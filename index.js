@@ -112,6 +112,7 @@
     var prototype = {
       /* eslint-disable key-spacing */
       'constructor':            Constant$bound,
+      '@@type':                 constantTypeIdent,
       '@@show':                 Constant$prototype$show,
       'fantasy-land/map':       Constant$prototype$map,
       'fantasy-land/bimap':     Constant$prototype$bimap,
@@ -145,18 +146,16 @@
     }
 
     Constant$bound.toString = function() {
-      if (A['@@type'] === Constant$bound['@@type']) {
-        return 'Constant (' + show (A) + ')';
-      } else if (Object.prototype.hasOwnProperty.call (A, 'name')) {
-        return 'Constant (' + A.name + ')';
-      } else {
+      if (!(Object.prototype.hasOwnProperty.call (A, 'name'))) {
         var source = String (A);
         var match = /^\s*function ([$_A-Za-z][$_A-Za-z0-9]*)/.exec (source);
         return 'Constant (' + (match == null ? source : match[1]) + ')';
+      } else if (A.name === Constant$bound.name) {
+        return 'Constant (' + show (A) + ')';
+      } else {
+        return 'Constant (' + A.name + ')';
       }
     };
-
-    Constant$bound['@@type'] = constantTypeIdent;
 
     //# Constant.fantasy-land/of :: Monoid m => a -> Constant m a
     //.
