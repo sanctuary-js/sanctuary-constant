@@ -68,7 +68,7 @@
   //. .   (Z[k].test (Constant (Useless.constructor) (Useless)) ? '\u2705   ' :
   //. .    Z[k].test (Constant (Array) (['foo', 'bar', 'baz'])) ? '\u2705 * ' :
   //. .    /* otherwise */                                        '\u274C   ')
-  //. . ) (S.filter (S.test (/^(?=[A-Z])(?!TypeClass$)/)) (Object.keys (Z)))
+  //. . ) (S.keys (S.unchecked.filter (S.is ($.TypeClass)) (Z)))
   //. [ 'Setoid          ✅ * ',  // if ‘a’ satisfies Setoid
   //. . 'Ord             ✅ * ',  // if ‘a’ satisfies Ord
   //. . 'Semigroupoid    ❌   ',
