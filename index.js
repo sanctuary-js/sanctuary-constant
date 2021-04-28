@@ -181,7 +181,7 @@
     //. `'Constant (' + A.name + ') (' + show (x) + ')'`.
     //.
     //. ```javascript
-    //. > show (Constant (Array) (['foo', 'bar', 'baz']))
+    //. > S.show (Constant (Array) (['foo', 'bar', 'baz']))
     //. 'Constant (Array) (["foo", "bar", "baz"])'
     //. ```
     function Constant$prototype$show() {
