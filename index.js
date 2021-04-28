@@ -13,11 +13,11 @@
 //. of type `a`. Mapping over a `Constant a b` has no effect because
 //. the `b -> c` function is never applied.
 
-(function(f) {
+(f => {
 
   'use strict';
 
-  var util = {inspect: {}};
+  const util = {inspect: {}};
 
   /* istanbul ignore else */
   if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -25,38 +25,39 @@
                         require ('sanctuary-show'),
                         require ('sanctuary-type-classes'));
   } else if (typeof define === 'function' && define.amd != null) {
-    define (['sanctuary-show', 'sanctuary-type-classes'], function(show, Z) {
-      return f (util, show, Z);
-    });
+    define (['sanctuary-show', 'sanctuary-type-classes'],
+            (show, Z) => f (util, show, Z));
   } else {
     self.sanctuaryConstant = f (util,
                                 self.sanctuaryShow,
                                 self.sanctuaryTypeClasses);
   }
 
-} (function(util, show, Z) {
+}) ((util, show, Z) => {
 
   'use strict';
 
   /* istanbul ignore if */
   if (typeof __doctest !== 'undefined') {
+    const {create, env} = __doctest.require ('sanctuary');
+    // eslint-disable-next-line no-var
     var $ = __doctest.require ('sanctuary-def');
-    var type = __doctest.require ('sanctuary-type-identifiers');
-    var S = (function() {
-      var S = __doctest.require ('sanctuary');
-      var ConstantType = $.BinaryType
-        ('Constant')
-        ('')
-        ([])
-        (function(x) { return type (x) === constantTypeIdent; })
-        (function(c) { return [c.value]; })
-        (function(c) { return []; });
-      var env = Z.concat (S.env, [ConstantType ($.Unknown) ($.Unknown)]);
-      return S.create ({checkTypes: false, env: env});
-    } ());
+    const type = __doctest.require ('sanctuary-type-identifiers');
+    const Constant = $.BinaryType
+      ('Constant')
+      ('')
+      ([])
+      (x => type (x) === constantTypeIdent)
+      (c => [c.value])
+      (c => []);
+    // eslint-disable-next-line no-var
+    var S = create ({
+      checkTypes: false,
+      env: Z.concat (env, [Constant ($.Unknown) ($.Unknown)]),
+    });
   }
 
-  var constantTypeIdent = 'sanctuary-constant/Constant@1';
+  const constantTypeIdent = 'sanctuary-constant/Constant@1';
 
   //. `Constant a b` satisfies the following [Fantasy Land][] specifications:
   //.
@@ -108,8 +109,8 @@
   //. > Constant (Number) (123)
   //. Constant (Number) (123)
   //. ```
-  function Constant(A) {
-    var prototype = {
+  const Constant = A => {
+    const prototype = {
       /* eslint-disable key-spacing */
       'constructor':            Constant$bound,
       '@@type':                 constantTypeIdent,
@@ -117,36 +118,38 @@
       'fantasy-land/map':       Constant$prototype$map,
       'fantasy-land/bimap':     Constant$prototype$bimap,
       'fantasy-land/reduce':    Constant$prototype$reduce,
-      'fantasy-land/traverse':  Constant$prototype$traverse
+      'fantasy-land/traverse':  Constant$prototype$traverse,
       /* eslint-enable key-spacing */
     };
 
-    var custom = util.inspect.custom;  // added in Node.js v6.6.0
-    /* istanbul ignore else */
-    if (typeof custom === 'symbol') {
-      prototype[custom] = Constant$prototype$show;
+    {
+      const {custom} = util.inspect;  // added in Node.js v6.6.0
+      /* istanbul ignore else */
+      if (typeof custom === 'symbol') {
+        prototype[custom] = Constant$prototype$show;
+      }
     }
 
     function Constant$bound(value) {
-      var identity = Object.create (prototype);
+      const constant = Object.create (prototype);
       if (Z.Setoid.test (value)) {
-        identity['fantasy-land/equals'] = Constant$prototype$equals;
+        constant['fantasy-land/equals'] = Constant$prototype$equals;
         if (Z.Ord.test (value)) {
-          identity['fantasy-land/lte'] = Constant$prototype$lte;
+          constant['fantasy-land/lte'] = Constant$prototype$lte;
         }
       }
       if (Z.Semigroup.test (value)) {
-        identity['fantasy-land/concat'] = Constant$prototype$concat;
-        identity['fantasy-land/ap'] = Constant$prototype$ap;
+        constant['fantasy-land/concat'] = Constant$prototype$concat;
+        constant['fantasy-land/ap'] = Constant$prototype$ap;
       }
-      identity.value = value;
-      return identity;
+      constant.value = value;
+      return constant;
     }
 
-    Constant$bound.toString = function() {
+    Constant$bound.toString = () => {
       if (!(Object.prototype.hasOwnProperty.call (A, 'name'))) {
-        var source = String (A);
-        var match = /^\s*function ([$_A-Za-z][$_A-Za-z0-9]*)/.exec (source);
+        const source = String (A);
+        const match = /^\s*function ([$_A-Za-z][$_A-Za-z0-9]*)/.exec (source);
         return 'Constant (' + (match == null ? source : match[1]) + ')';
       } else if (A.name === Constant$bound.name) {
         return 'Constant (' + show (A) + ')';
@@ -166,13 +169,11 @@
     //. > S.of (Constant (String)) (42)
     //. Constant (String) ('')
     //. ```
-    (function() {
-      var empty;
+    (() => {
+      let empty;
       try { empty = Z.empty (A); } catch (err) { return; }
-      Constant$bound['fantasy-land/of'] = function Constant$of(x) {
-        return Constant$bound (empty);
-      };
-    } ());
+      Constant$bound['fantasy-land/of'] = x => Constant$bound (empty);
+    }) ();
 
     //# Constant#@@show :: Showable a => Constant a b ~> () -> String
     //.
@@ -257,7 +258,7 @@
     //. Constant (Number) (3)
     //. ```
     function Constant$prototype$bimap(f, g) {
-      var x = f (this.value);
+      const x = f (this.value);
       return Constant (x.constructor) (x);
     }
 
@@ -300,11 +301,11 @@
     }
 
     return Constant$bound;
-  }
+  };
 
   return Constant;
 
-}));
+});
 
 //. [Applicative]:              v:fantasyland/fantasy-land#Applicative
 //. [Fantasy Land]:             v:fantasyland/fantasy-land
