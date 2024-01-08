@@ -12,6 +12,10 @@
       "rules": {
         "no-unused-vars": ["error", {"args": "none", "varsIgnorePattern": "^S$"}]
       }
+    },
+    {
+      "files": ["test/**/*.js"],
+      "parserOptions": {"sourceType": "module"}
     }
   ]
 }
