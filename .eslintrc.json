@@ -3,12 +3,8 @@
   "extends": ["./node_modules/sanctuary-style/eslint.json"],
   "overrides": [
     {
-      "files": ["*.md"],
-      "globals": {"$": "readonly", "Constant": "readonly", "S": "readonly", "Z": "readonly"}
-    },
-    {
       "files": ["index.js"],
-      "globals": {"Deno": "readonly"},
+      "globals": {"Deno": "readonly", "__doctest": "readonly", "define": "readonly", "module": "readonly", "require": "readonly", "self": "readonly"},
       "rules": {
         "no-unused-vars": ["error", {"args": "none", "varsIgnorePattern": "^S$"}]
       }

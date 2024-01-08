@@ -19,7 +19,7 @@
 
   const util = {inspect: {}};
 
-  /* istanbul ignore else */
+  /* c8 ignore start */
   if (typeof module === 'object' && typeof module.exports === 'object') {
     module.exports = f (require ('util'),
                         require ('sanctuary-show'),
@@ -32,12 +32,13 @@
                                 self.sanctuaryShow,
                                 self.sanctuaryTypeClasses);
   }
+  /* c8 ignore stop */
 
 }) ((util, show, Z) => {
 
   'use strict';
 
-  /* istanbul ignore if */
+  /* c8 ignore start */
   if (typeof __doctest !== 'undefined') {
     const {create, env} = __doctest.require ('sanctuary');
     // eslint-disable-next-line no-var
@@ -56,6 +57,7 @@
       env: Z.concat (env, [Constant ($.Unknown) ($.Unknown)]),
     });
   }
+  /* c8 ignore stop */
 
   const constantTypeIdent = 'sanctuary-constant/Constant@1';
 
@@ -124,16 +126,17 @@
 
     {
       const {custom} = util.inspect;  // added in Node.js v6.6.0
-      /* istanbul ignore else */
       if (typeof custom === 'symbol') {
         prototype[custom] = Constant$prototype$show;
       }
-      /* istanbul ignore if */
-      if (typeof Deno !== 'undefined') {
-        if (Deno != null && typeof Deno.customInspect === 'symbol') {
-          prototype[Deno.customInspect] = Constant$prototype$show;
-        }
-      }
+
+      /* c8 ignore start */
+      if (
+        typeof Deno !== 'undefined' &&
+        Deno != null &&
+        typeof Deno.customInspect === 'symbol'
+      ) prototype[Deno.customInspect] = Constant$prototype$show;
+      /* c8 ignore stop */
     }
 
     function Constant$bound(value) {
