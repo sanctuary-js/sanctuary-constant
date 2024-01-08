@@ -124,20 +124,17 @@
       /* eslint-enable key-spacing */
     };
 
-    {
-      const {custom} = util.inspect;  // added in Node.js v6.6.0
-      if (typeof custom === 'symbol') {
-        prototype[custom] = Constant$prototype$show;
-      }
-
-      /* c8 ignore start */
-      if (
-        typeof Deno !== 'undefined' &&
-        Deno != null &&
-        typeof Deno.customInspect === 'symbol'
-      ) prototype[Deno.customInspect] = Constant$prototype$show;
-      /* c8 ignore stop */
+    if (globalThis.process?.versions?.node != null) {
+      const inspect = Symbol.for ('nodejs.util.inspect.custom');
+      prototype[inspect] = Constant$prototype$show;
     }
+
+    /* c8 ignore start */
+    if (typeof globalThis.Deno?.customInspect === 'symbol') {
+      const inspect = globalThis.Deno.customInspect;
+      prototype[inspect] = Constant$prototype$show;
+    }
+    /* c8 ignore stop */
 
     function Constant$bound(value) {
       const constant = Object.create (prototype);
