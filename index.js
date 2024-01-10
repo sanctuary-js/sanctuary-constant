@@ -17,24 +17,19 @@
 
   'use strict';
 
-  const util = {inspect: {}};
-
   /* c8 ignore start */
   if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = f (require ('util'),
-                        require ('sanctuary-show'),
+    module.exports = f (require ('sanctuary-show'),
                         require ('sanctuary-type-classes'));
   } else if (typeof define === 'function' && define.amd != null) {
-    define (['sanctuary-show', 'sanctuary-type-classes'],
-            (show, Z) => f (util, show, Z));
+    define (['sanctuary-show', 'sanctuary-type-classes'], f);
   } else {
-    self.sanctuaryConstant = f (util,
-                                self.sanctuaryShow,
+    self.sanctuaryConstant = f (self.sanctuaryShow,
                                 self.sanctuaryTypeClasses);
   }
   /* c8 ignore stop */
 
-}) ((util, show, Z) => {
+}) ((show, Z) => {
 
   'use strict';
 
