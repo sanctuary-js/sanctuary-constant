@@ -1,4 +1,5 @@
 import {deepStrictEqual as eq} from 'node:assert';
+import {inspect} from 'node:util';
 
 import laws from 'fantasy-laws';
 import jsc from 'jsverify';
@@ -98,6 +99,19 @@ test ('@@show', () => {
   delete Bar.name;
   eq (show (Constant (Bar) (Bar ('bar'))),
       'Constant (' + String (Bar) + ') (Bar ("bar"))');
+});
+
+test ('util.inspect', () => {
+  eq (inspect (Constant (Array) (['foo', 'bar', 'baz'])),
+      'Constant (Array) (["foo", "bar", "baz"])');
+  eq (inspect (Constant (Constant (Constant (Number)))
+                        (Constant (Constant (Number))
+                                  (Constant (Number)
+                                            (-0)))),
+      'Constant (Constant (Constant (Number)))' +
+              ' (Constant (Constant (Number))' +
+                        ' (Constant (Number)' +
+                                  ' (-0)))');
 });
 
 test ('Setoid', () => {
