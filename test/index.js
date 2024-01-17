@@ -10,7 +10,7 @@ import Z from 'sanctuary-type-classes';
 import type from 'sanctuary-type-identifiers';
 import Useless from 'sanctuary-useless';
 
-import Constant from '../index.js';
+import {Constant} from '../index.js';
 
 
 //    ConstantArb :: Monoid m => TypeRep m -> Arbitrary a -> Arbitrary (Constant a b)
