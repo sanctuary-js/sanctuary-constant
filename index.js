@@ -147,7 +147,10 @@
       return constant;
     }
 
-    Constant$bound.toString = () => {
+    //  XXX: sanctuary-show@3 only respects @@show on "objects". Fool it.
+    Constant$bound[Symbol.toStringTag] = 'Object';
+
+    Constant$bound['@@show'] = () => {
       if (!(Object.prototype.hasOwnProperty.call (A, 'name'))) {
         const source = String (A);
         const match = /^\s*function ([$_A-Za-z][$_A-Za-z0-9]*)/.exec (source);
@@ -186,7 +189,7 @@
     //. 'Constant (Array) (["foo", "bar", "baz"])'
     //. ```
     function Constant$prototype$show() {
-      return String (Constant$bound) + ' (' + show (this.value) + ')';
+      return show (Constant$bound) + ' (' + show (this.value) + ')';
     }
 
     //# Constant#fantasy-land/equals :: Setoid a => Constant a b ~> Constant a b -> Boolean
